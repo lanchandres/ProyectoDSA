@@ -1,34 +1,34 @@
 import java.util.*;
-
+// parte de :
+// Raphaela Canadas :)
 public class FloydWarshall {
 
-    // infinito grande para decir "no hay camino"
     static final long INF = (long) 1e15;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
         // entrada: n m y luego m lineas u v w
-        // vertices 0..n-1
+        // vertices 0 n-1
         System.out.print("n: ");
         int n = sc.nextInt();
 
         System.out.print("m: ");
         int m = sc.nextInt();
 
-        // cambia a true si tu grafo es dirigido
+        
         boolean dirigido = false;
 
         long[][] dist = new long[n][n];
 
-        // init basico
+      
         for (int i = 0; i < n; i++) {
             Arrays.fill(dist[i], INF);
             dist[i][i] = 0;
         }
 
         // leer aristas
-        // si hay varias entre los mismos nodos, nos quedamos con la mas barata
+        
         System.out.println("mete aristas: u v w");
         for (int i = 0; i < m; i++) {
             int u = sc.nextInt();
@@ -39,7 +39,6 @@ public class FloydWarshall {
             if (!dirigido && w < dist[v][u]) dist[v][u] = w;
         }
 
-        // floyd warshall: prueba todos los k como "parada intermedia"
         for (int k = 0; k < n; k++) {
             for (int i = 0; i < n; i++) {
                 if (dist[i][k] >= INF) continue; // si i->k no existe, ni intentes
@@ -61,7 +60,7 @@ public class FloydWarshall {
             System.out.println();
         }
 
-        // mini consulta tipo "para tsp te sirve como tabla de costos"
+        // mini consulta tipo para tsp te sirve como tabla de pesos de a - b
         System.out.print("\nconsulta (u v): ");
         int u = sc.nextInt();
         int v = sc.nextInt();
