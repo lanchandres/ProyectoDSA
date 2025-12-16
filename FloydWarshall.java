@@ -1,0 +1,77 @@
+import java.util.*;
+
+public class FloydWarshall {
+
+    // infinito grande para decir "no hay camino"
+    static final long INF = (long) 1e15;
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // entrada: n m y luego m lineas u v w
+        // vertices 0..n-1
+        System.out.print("n: ");
+        int n = sc.nextInt();
+
+        System.out.print("m: ");
+        int m = sc.nextInt();
+
+        // cambia a true si tu grafo es dirigido
+        boolean dirigido = false;
+
+        long[][] dist = new long[n][n];
+
+        // init basico
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(dist[i], INF);
+            dist[i][i] = 0;
+        }
+
+        // leer aristas
+        // si hay varias entre los mismos nodos, nos quedamos con la mas barata
+        System.out.println("mete aristas: u v w");
+        for (int i = 0; i < m; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            long w = sc.nextLong();
+
+            if (w < dist[u][v]) dist[u][v] = w;
+            if (!dirigido && w < dist[v][u]) dist[v][u] = w;
+        }
+
+        // floyd warshall: prueba todos los k como "parada intermedia"
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                if (dist[i][k] >= INF) continue; // si i->k no existe, ni intentes
+                for (int j = 0; j < n; j++) {
+                    if (dist[k][j] >= INF) continue; // si k->j no existe, tampoco
+                    long cand = dist[i][k] + dist[k][j];
+                    if (cand < dist[i][j]) dist[i][j] = cand;
+                }
+            }
+        }
+
+        // imprimir matriz final
+        System.out.println("\nmatriz de distancias minimas:");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dist[i][j] >= INF / 2) System.out.print("inf\t");
+                else System.out.print(dist[i][j] + "\t");
+            }
+            System.out.println();
+        }
+
+        // mini consulta tipo "para tsp te sirve como tabla de costos"
+        System.out.print("\nconsulta (u v): ");
+        int u = sc.nextInt();
+        int v = sc.nextInt();
+
+        if (dist[u][v] >= INF / 2) {
+            System.out.println("no hay camino de " + u + " a " + v);
+        } else {
+            System.out.println("distancia minima de " + u + " a " + v + " = " + dist[u][v]);
+        }
+
+        sc.close();
+    }
+}
